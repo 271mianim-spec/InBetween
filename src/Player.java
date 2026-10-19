@@ -46,14 +46,12 @@ public class Player {
             bet = Integer.parseInt(betAsString);
         } catch (Exception e) {
             System.out.println("Invalid Bet!");
-            round();
-            return;
+            setBet();
         }
 
-        if (bet < 0 || bet > money) {
+        if (bet <= 0 || bet > money) {
             System.out.println("You cannot bet this much!");
-            round();
-            return;
+            setBet();
         }
 
     }
@@ -62,9 +60,9 @@ public class Player {
         String willDouble = getInput("Do you wish to double? (Y/N) > ");
         if (willDouble.equalsIgnoreCase("Y")) {
             bet = bet*2;
-            System.out.println("The new bet is "+bet);
+            System.out.println("The new bet is $"+bet);
         } else if (willDouble.equalsIgnoreCase("N")) {
-            System.out.println("The bet is currently "+bet);
+            System.out.println("The bet is currently $"+bet);
         } else {
              handleDouble();
              return;
@@ -109,7 +107,7 @@ public class Player {
             lowerCard = card1;
         }
 
-        if (bet*2<money) {
+        if (bet*2<=money) {
             handleDouble();
         }
 
@@ -119,13 +117,18 @@ public class Player {
 
         Card decidingCard = deck.drawRandomCard();
         boolean isInside = false;
-        if (decidingCard.getValue() < higherCard.getValue() && decidingCard.getValue() < lowerCard.getValue()) {
+        if (decidingCard.getValue() < higherCard.getValue() && decidingCard.getValue() > lowerCard.getValue()) {
             isInside = true;
         }
 
         System.out.println("Card 1: " + card1);
         System.out.println("Card 2: " + card2);
         System.out.println("Pulled Card: " + decidingCard);
+
+        if (decidingCard.getValue() == card1.getValue() || decidingCard.getValue() == card2.getValue()) {
+            System.out.println("The new card shares a value with one of the first two cards. You lose.");
+            return false;
+        }
 
 
         if (answer.equalsIgnoreCase("inside") && isInside) {
